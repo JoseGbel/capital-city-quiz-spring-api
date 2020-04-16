@@ -11,7 +11,13 @@ import javax.validation.constraints.NotEmpty
 @Entity
 class ApplicationUser (
     @NotEmpty
-    var username: String,
+    val username: String,
     @NotEmpty
-    var password: String
+    var password: String,
+    @NotEmpty
+    val email: String,
+    @NotEmpty
+    val name: String,
+    @NotEmpty
+    val lastName: String
     ) : AbstractPersistable<Long>()

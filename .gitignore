@@ -3,3 +3,6 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore application properties as still contains db credentials
+application.properties

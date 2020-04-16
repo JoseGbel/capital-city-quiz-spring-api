@@ -8,11 +8,14 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import sample.kotlin.spring.model.entities.Country
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -21,25 +24,28 @@ class AppIT {
     @Autowired
     lateinit var mockMvc: MockMvc
 
+    @Autowired
+    lateinit var testRest : TestRestTemplate
+
     @Test
-    fun getAllRides() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/meal")
+    fun getAllCountries() {
+        mockMvc.perform(MockMvcRequestBuilders.get("/countries")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andReturn()
     }
 
     @Test
-    fun getSingleMeal() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/meal/1")
+    fun getSingleCountry() {
+        mockMvc.perform(MockMvcRequestBuilders.get("/country/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andReturn()
     }
 
     @Test
-    fun returnNotFoundForInvalidSingleMeal() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/meal/6")
+    fun returnNotFoundForInvalidSingleCountry() {
+        mockMvc.perform(MockMvcRequestBuilders.get("/country/6")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound)
                 .andReturn()
@@ -48,21 +54,18 @@ class AppIT {
     @Test
     fun shouldAddNewMealSuccessfully() {
         val jsonMeal = """{
-	                        "name": "Tortilla",
-	                        "description": "Spanish Omelette",
-	                        "ingredients": {
-                                "Onion": 1,
-                                "Potatoes": 3
-	                            }
+	                        "name": "Italy",
+	                        "capitalCity": "Rome",
+	                        "continent": "Europe"
                             }"""
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/meal")
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/countries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMeal)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andReturn()
     }
-
 
 }

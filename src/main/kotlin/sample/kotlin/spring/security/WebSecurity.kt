@@ -42,5 +42,4 @@ open class WebSecurity(private val userDetailsService: UserDetailsServiceImpl,
         source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
         return source
     }
-
 }
