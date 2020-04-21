@@ -7,7 +7,6 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.validation.constraints.NotEmpty
 
-
 @Entity
 class ApplicationUser (
     @NotEmpty
@@ -19,5 +18,5 @@ class ApplicationUser (
     @NotEmpty
     val name: String,
     @NotEmpty
-    val lastName: String
+    val surname: String
     ) : AbstractPersistable<Long>()
