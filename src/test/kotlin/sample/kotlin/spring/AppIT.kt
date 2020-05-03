@@ -59,7 +59,6 @@ class AppIT {
 	                        "continent": "Europe"
                             }"""
 
-
         mockMvc.perform(MockMvcRequestBuilders.post("/countries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMeal)

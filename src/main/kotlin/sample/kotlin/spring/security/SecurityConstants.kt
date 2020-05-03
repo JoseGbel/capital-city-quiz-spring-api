@@ -6,4 +6,5 @@ object SecurityConstants {
     const val TOKEN_PREFIX = "Bearer "
     const val HEADER_STRING = "Authorization"
     const val SIGN_UP_URL = "/users/sign-up"
+    const val VERIFY_URL  = "/users/verify"
 }

@@ -13,6 +13,7 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import sample.kotlin.spring.security.SecurityConstants.SIGN_UP_URL
+import sample.kotlin.spring.security.SecurityConstants.VERIFY_URL
 import sample.kotlin.spring.user.UserDetailsServiceImpl
 
 
@@ -24,6 +25,7 @@ open class WebSecurity(private val userDetailsService: UserDetailsServiceImpl,
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.GET, VERIFY_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(JWTAuthenticationFilter(authenticationManager()))
