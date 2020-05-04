@@ -2,10 +2,8 @@ package sample.kotlin.spring.user
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
-import java.lang.Exception
 import java.lang.IllegalArgumentException
 
 @RestController
@@ -27,10 +25,16 @@ class UserController(private val applicationUserRepository: ApplicationUserRepos
     }
 
     @GetMapping("/verify")
-    fun verifyEmailAlreadyExist(@RequestParam(value = "email") email : String) : ResponseEntity<Boolean> {
-        val response : ApplicationUser? = applicationUserRepository.findByEmail(email)
-        if (response != null)
-            return ResponseEntity.status(HttpStatus.OK).body(true)
-        return ResponseEntity.status(HttpStatus.OK).body(false)
+    fun verifyUserAlreadyExist(@RequestParam(value = "username") username: String,
+                               @RequestParam(value = "email") email: String) : ResponseEntity<UserExistenceResponse> {
+        val usernameResponse : ApplicationUser? = applicationUserRepository.findByUsername(username)
+        val usernameInDatabase = usernameResponse != null
+
+        val emailResponse : ApplicationUser? = applicationUserRepository.findByEmail(email)
+        val emailInDatabase = emailResponse != null
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(UserExistenceResponse(usernameInDatabase, emailInDatabase))
     }
 }

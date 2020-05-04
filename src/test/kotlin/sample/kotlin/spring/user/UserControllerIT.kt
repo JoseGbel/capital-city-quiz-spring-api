@@ -1,6 +1,5 @@
 package sample.kotlin.spring.user
 
-import com.jayway.jsonpath.JsonPath
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -21,11 +19,6 @@ class UserControllerIT {
 
     @Autowired
     lateinit var mockMvc: MockMvc
-
-    @Before
-    fun setUp(){
-
-    }
 
     @Test
     fun signUp() {
@@ -46,20 +39,46 @@ class UserControllerIT {
     }
 
     @Test
-    fun shouldReturnTrueIfEmailAlreadyExist() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/verify?email=hannahlhughes94@gmail.com")
+    fun shouldReturnCorrectJSONIfEmailAlreadyExistAndUsernameDoesNotExist() {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/users/verify?email=hannahlhughes94@gmail.com&username=nonExistentUsername")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(content().string("true"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.usernameInDatabase").value(false))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.emailInDatabase").value(true))
                 .andReturn()
     }
 
     @Test
-    fun shouldReturnFalseIfEmailDoesNotExist() {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/verify?email=available@email.com")
+    fun shouldReturnCorrectJSONIfEmailAlreadyExistAndUsernameAlreadyExist() {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/users/verify?email=hannahlhughes94@gmail.com&username=Hannah")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(content().string("false"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.emailInDatabase").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.usernameInDatabase").value(true))
+                .andReturn()
+    }
+
+    @Test
+    fun shouldReturnCorrectJSONIfEmailDoesNotExistAndUsernameDoesNotExist() {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/users/verify?email=nonExistent@email.com&username=nonExistentUsername")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.emailInDatabase").value(false))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.usernameInDatabase").value(false))
+                .andReturn()
+    }
+
+    @Test
+    fun shouldReturnCorrectJSONIfEmailDoesNotExistAndUsernameExist() {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/users/verify?email=nonExistent@email.com&username=Hannah")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.emailInDatabase").value(false))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.usernameInDatabase").value(true))
                 .andReturn()
     }
 }
